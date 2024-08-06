@@ -1,0 +1,50 @@
+body {
+  background-color: black;
+  color: white;
+  font-size: 33px;
+  align-items: center;
+}
+
+.word:hover {
+  color: yellow;
+  cursor: pointer;
+}
+
+span {
+  width: 100px;
+  height: 40px;
+  border-width: 100px;
+}
+#numberOfVocabFrom {
+  width: 100px;
+}
+#numberOfVocabTo {
+  width: 100px;
+}
+.inputName {
+  width: 100px;
+}
+
+li {
+  margin-left: 20px;
+  height: 40px;
+}
+#container {
+  margin-left: 200px;
+}
+.selectedWord {
+  color: yellow;
+}
+svg {
+  position: relative;
+  z-index: -10;
+}
+button {
+  position: relative;
+  z-index: 1;
+}
+
+#selectVoice {
+  width: 200px;
+  height: 30px;
+}

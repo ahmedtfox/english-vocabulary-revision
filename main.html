@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="main.css" rel="stylesheet" />
+    <title>English</title>
+  </head>
+  <body>
+    <form id="myForm">
+      <input type="file" id="csvFile" accept=".csv" value="eng.csv" />
+      <br />
+      <input
+        min="0"
+        type="number"
+        name="numberOfVocabFrom"
+        id="numberOfVocabFrom"
+      />
+      <label for="numberOfVocabFrom">From</label>
+      <br />
+      <input
+        min="1"
+        type="number"
+        id="numberOfVocabTo"
+        name="numberOfVocabTo"
+      />
+      <label for="numberOfVocabTo">To</label>
+      <br />
+      <input type="submit" value="Submit" />
+    </form>
+    <button id="changeWords">change Words</button>
+    <div id="info"></div>
+
+    <div>
+      <select name="voice" id="selectVoice"></select>
+    </div>
+    <div>
+      <button id="playBtn" type="button">play</button>
+    </div>
+
+    <ol id="container"></ol>
+    <!-- 
+    <ol>
+      <li>
+        <a
+          href="https://translate.google.com/?sl=en&tl=ar&text=ball%0A&op=translate"
+          title="View this site in English."
+          >English</a
+        >
+      </li>
+    </ol>
+    -->
+    <script src="main.js"></script>
+  </body>
+</html>
