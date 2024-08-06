@@ -33,21 +33,21 @@ myForm.addEventListener("submit", function (e) {
 function getInput() {
   const numberOfVocabFrom = document.getElementById("numberOfVocabFrom");
   const numberOfVocabTo = document.getElementById("numberOfVocabTo");
-
+  /* 
   document.addEventListener("DOMContentLoaded", () => {
     numberOfVocabFrom.setAttribute("value", "100");
     numberOfVocabTo.setAttribute("value", lastStudy.numberOfVocabTo);
   });
-
-  const value1 = numberOfVocabFrom.value;
-  const value2 = numberOfVocabTo.value;
+ */
+  const value1 = Number(numberOfVocabFrom.value);
+  const value2 = Number(numberOfVocabTo.value);
+  console.log(value1, value2);
   if (value1 >= value2) {
     alert("wrong");
   } else {
-    lastStudy.numberOfVocabFrom =
-      document.getElementById("numberOfVocabFrom").value;
-    lastStudy.numberOfVocabTo =
-      document.getElementById("numberOfVocabTo").value;
+    lastStudy.numberOfVocabFrom = value1;
+    lastStudy.numberOfVocabTo = value2;
+
     setLocalStorage("lastStudy", lastStudy);
   }
 }
@@ -144,7 +144,7 @@ function writeInPage() {
   }
   document.getElementById(
     "info"
-  ).innerText = `form ${lastStudy.numberOfVocabFrom} to ${lastStudy.numberOfVocabTo} `;
+  ).innerText = `form ${lastStudy.numberOfVocabFrom} to ${lastStudy.numberOfVocabTo} and number of words is ${fileLines.length} `;
   container.innerHTML = html;
   container.setAttribute("start", lastStudy.numberOfVocabFrom);
   readAloud();
