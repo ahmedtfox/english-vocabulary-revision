@@ -33,15 +33,8 @@ myForm.addEventListener("submit", function (e) {
 function getInput() {
   const numberOfVocabFrom = document.getElementById("numberOfVocabFrom");
   const numberOfVocabTo = document.getElementById("numberOfVocabTo");
-  /* 
-  document.addEventListener("DOMContentLoaded", () => {
-    numberOfVocabFrom.setAttribute("value", "100");
-    numberOfVocabTo.setAttribute("value", lastStudy.numberOfVocabTo);
-  });
- */
   const value1 = Number(numberOfVocabFrom.value);
   const value2 = Number(numberOfVocabTo.value);
-  console.log(value1, value2);
   if (value1 >= value2) {
     alert("wrong");
   } else {
