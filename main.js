@@ -8,8 +8,8 @@ const myForm = document.getElementById("myForm");
 const csvFile = document.getElementById("csvFile");
 csvFile.setAttribute.value = "eng.csv";
 let lastStudy = {
-  numberOfVocabFrom: 0,
-  numberOfVocabTo: 0,
+  from: 0,
+  to: 0,
 };
 
 let fileLines = [];
@@ -38,8 +38,8 @@ function getInput() {
   if (value1 >= value2) {
     alert("wrong");
   } else {
-    lastStudy.numberOfVocabFrom = value1;
-    lastStudy.numberOfVocabTo = value2;
+    lastStudy.from = value1;
+    lastStudy.to = value2;
 
     setLocalStorage("lastStudy", lastStudy);
   }
@@ -53,7 +53,8 @@ function prepareData(pram) {
     //pram[i] = text.replace(/, */g, "");
     //console.log(lines[i].replace(/, */g, ""));
     const line = lines[i].replace(/, */g, "");
-    newArr.push(line);
+    const line2 = line.split(".")[0];
+    newArr.push(line2);
   }
   fileLines = newArr;
   setLocalStorage("fileLines", fileLines);
@@ -69,6 +70,7 @@ function getLocalStorage(pram) {
 writeInPage();
 changeWords();
 playBtn();
+nextPageBtn();
 
 function changeWords() {
   const changeWords = document.getElementById("changeWords");
@@ -76,8 +78,7 @@ function changeWords() {
     //console.log("hiii");
     getInput();
     writeInPage();
-    document.getElementById("numberOfVocabFrom").value =
-      lastStudy.numberOfVocabFrom;
+    document.getElementById("numberOfVocabFrom").value = lastStudy.from;
   });
 }
 
@@ -89,15 +90,19 @@ function playBtn() {
   playBtn.addEventListener("click", () => {
     // console.log("voice.lang");
     //getInput();
-    let x = lastStudy.numberOfVocabFrom;
+    let x = lastStudy.from;
     // console.log("hi");
 
     const myInterval = setInterval(() => {
       // if pause button clicked
-      if (x === Number(lastStudy.numberOfVocabTo)) {
+      if (x === Number(lastStudy.to)) {
         clearInterval(myInterval);
       }
+      if (x === Number(lastStudy.to)) {
+        return;
+      }
       if (waitingFlag === 0) {
+        console.log(x);
         waitingFlag = 1;
         selectWord(fileLines[x]);
         readWord(fileLines[x], chosenVoice);
@@ -110,20 +115,16 @@ function playBtn() {
 function writeInPage() {
   let counter = 0;
   lastStudy = getLocalStorage("lastStudy") || {
-    numberOfVocabFrom: 0,
-    numberOfVocabTo: 0,
+    from: 0,
+    to: 0,
   };
   fileLines = getLocalStorage("fileLines");
   const container = document.getElementById("container");
   let html = "";
-  for (
-    let i = lastStudy.numberOfVocabFrom;
-    i < lastStudy.numberOfVocabTo;
-    i++
-  ) {
+  for (let i = lastStudy.from; i < lastStudy.to; i++) {
     html =
       html +
-      `<li id="${fileLines[i]}li">
+      `<li id="${fileLines[i]}_li">
       <span class="searchIcon" id="${fileLines[i]}_icon">
       <button class="searchIcon" id="${fileLines[i]}_icon">
       ${translateIcon}
@@ -137,9 +138,9 @@ function writeInPage() {
   }
   document.getElementById(
     "info"
-  ).innerText = `form ${lastStudy.numberOfVocabFrom} to ${lastStudy.numberOfVocabTo} and number of words is ${fileLines.length} `;
+  ).innerText = `form ${lastStudy.from} to ${lastStudy.to} and number of words is ${fileLines.length} `;
   container.innerHTML = html;
-  container.setAttribute("start", lastStudy.numberOfVocabFrom);
+  container.setAttribute("start", lastStudy.from);
   readAloud();
   searchIcon();
 }
@@ -162,16 +163,7 @@ function searchIcon() {
   searchIcon.forEach((element) => {
     element.addEventListener("click", function (event) {
       let word = event.target.id;
-      /*       console.log(word.at(4));
-      for (let i = 0; i < word.length; i++) {
-        if (word.at(i) === ".") {
-          word.substring(0, i - 1);
-          console.log(word);
-          break;
-        }
-      } */
-      const word2 = word.split(".")[0].toLowerCase();
-      //console.log(word2);
+      const word2 = word.split("_")[0].toLowerCase();
       const searchUrl = `https://www.oxfordlearnersdictionaries.com/definition/american_english/${word2}`;
       window.open(searchUrl, "_blank");
     });
@@ -180,13 +172,11 @@ function searchIcon() {
 let voicesArr = [];
 function getChosenVoice() {
   let elements = document.getElementById("selectVoice");
-  //console.log(chosenVoice);
 
   elements.addEventListener("click", () => {
     voicesArr = [];
     voices = window.speechSynthesis.getVoices();
-    //localStorage.setItem("voiceStorage", JSON.stringify(voices));
-    //console.log(typeof voices);
+
     for (let i = 0; i < voices.length; i++) {
       if (voices[i].lang === "en-US") {
         voicesArr.push({ id: i, name: voices[i].name });
@@ -199,7 +189,6 @@ function getChosenVoice() {
     }
   });
   voicesArr = getLocalStorage("voiceStorage");
-  //console.log(elements.options.length, voicesArr.length);
 
   if (elements.options.length !== voicesArr.length) {
     while (elements.hasChildNodes()) {
@@ -222,12 +211,7 @@ function getChosenVoice() {
     }
   }
 
-  //console.log(voicesArr);
-
-  //console.log(elements);
   const selectedOption = elements.value;
-
-  //console.log(selectedOption);
 
   const voiceNumber = Number(selectedOption) || 0;
   //console.log(voiceNumber);
@@ -268,18 +252,31 @@ function readWord(word, chosenVoice) {
 }
 
 function selectWord(input) {
-  const element = document.getElementById(`${input}li`);
-  //console.log(element.style.height);
-  //element.setAttribute("class", "democlass");
+  const id = `${input}_li`;
+  console.log(id);
+  const element = document.getElementById(id);
   element.setAttribute("class", "selectedWord");
-
   if (window.innerHeight + window.scrollY < document.body.offsetHeight) {
     window.scrollBy(0, 40); // Continue scrolling if not at the bottom
   }
 }
 
 function unSelectWord(input) {
-  const element = document.getElementById(`${input}li`);
-  //element.setAttribute("class", "democlass");
+  const id = `${input}_li`;
+
+  const element = document.getElementById(id);
+
   element.removeAttribute("class", "selectedWord");
+}
+
+function nextPageBtn() {
+  const nextPage = document.getElementById("nextPage");
+
+  nextPage.addEventListener("click", () => {
+    const delta = lastStudy.to - lastStudy.from; //100
+    lastStudy.from = lastStudy.to;
+    lastStudy.to = lastStudy.from + delta;
+    setLocalStorage("lastStudy", lastStudy);
+    writeInPage();
+  });
 }
