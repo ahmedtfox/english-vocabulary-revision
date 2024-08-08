@@ -6,14 +6,15 @@ const translateIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height
 
 const myForm = document.getElementById("myForm");
 const csvFile = document.getElementById("csvFile");
-csvFile.setAttribute.value = "eng.csv";
 let lastStudy = {
   from: 0,
   to: 0,
 };
 
 let fileLines = [];
-//console.log(fileLines);
+
+
+/* 
 myForm.addEventListener("submit", function (e) {
   e.preventDefault();
   const input = csvFile.files[0];
@@ -29,6 +30,14 @@ myForm.addEventListener("submit", function (e) {
 
   //console.log(text[2]);
 });
+ */
+async function loadWord() {
+  let response = await fetch("eng.csv");
+  text = await response.text();
+  prepareData(text);
+  //console.log(text);
+}
+loadWord();
 
 function getInput() {
   const numberOfVocabFrom = document.getElementById("numberOfVocabFrom");
@@ -46,14 +55,15 @@ function getInput() {
 }
 
 function prepareData(pram) {
-  const lines = pram.split(/\r?\n/); // Split text into an array of lines
+  const lines = pram.split("."); // Split text into an array of lines
   let newArr = [];
   for (let i = 0; i < lines.length; i++) {
     // Remove commas and trim whitespace
     //pram[i] = text.replace(/, */g, "");
     //console.log(lines[i].replace(/, */g, ""));
-    const line = lines[i].replace(/, */g, "");
-    const line2 = line.split(".")[0];
+    //const line = lines[i].replace(/, */g, "");
+    const line = lines[i].replace(/\s/g, "");
+    const line2 = line;
     newArr.push(line2);
   }
   fileLines = newArr;
@@ -102,7 +112,6 @@ function playBtn() {
         return;
       }
       if (waitingFlag === 0) {
-        console.log(x);
         waitingFlag = 1;
         selectWord(fileLines[x]);
         readWord(fileLines[x], chosenVoice);
@@ -253,7 +262,6 @@ function readWord(word, chosenVoice) {
 
 function selectWord(input) {
   const id = `${input}_li`;
-  console.log(id);
   const element = document.getElementById(id);
   element.setAttribute("class", "selectedWord");
   if (window.innerHeight + window.scrollY < document.body.offsetHeight) {
@@ -263,9 +271,7 @@ function selectWord(input) {
 
 function unSelectWord(input) {
   const id = `${input}_li`;
-
   const element = document.getElementById(id);
-
   element.removeAttribute("class", "selectedWord");
 }
 
