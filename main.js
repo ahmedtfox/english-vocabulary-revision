@@ -6,14 +6,13 @@ const translateIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height
 
 const myForm = document.getElementById("myForm");
 const csvFile = document.getElementById("csvFile");
-csvFile.setAttribute.value = "eng.csv";
 let lastStudy = {
   from: 0,
-  to: 0,
+  to: 10,
 };
 
 let fileLines = [];
-//console.log(fileLines);
+let voicesArr = [];
 myForm.addEventListener("submit", function (e) {
   e.preventDefault();
   const input = csvFile.files[0];
@@ -21,6 +20,7 @@ myForm.addEventListener("submit", function (e) {
   reader.onload = function (e) {
     text = e.target.result;
     //document.write(text);
+    console.log(text);
     prepareData(text);
     getInput();
     writeInPage();
@@ -30,6 +30,21 @@ myForm.addEventListener("submit", function (e) {
   //console.log(text[2]);
 });
 
+/* async function loadWord() {
+  try {
+    let response = await fetch("../eng.csv");
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    let text = await response.text();
+    prepareData(text);
+    console.log(text);
+  } catch (error) {
+    console.error("Error fetching the file:", error);
+  }
+}
+loadWord();
+ */
 function getInput() {
   const numberOfVocabFrom = document.getElementById("numberOfVocabFrom");
   const numberOfVocabTo = document.getElementById("numberOfVocabTo");
@@ -46,6 +61,7 @@ function getInput() {
 }
 
 function prepareData(pram) {
+  console.log(pram);
   const lines = pram.split(/\r?\n/); // Split text into an array of lines
   let newArr = [];
   for (let i = 0; i < lines.length; i++) {
@@ -102,7 +118,6 @@ function playBtn() {
         return;
       }
       if (waitingFlag === 0) {
-        console.log(x);
         waitingFlag = 1;
         selectWord(fileLines[x]);
         readWord(fileLines[x], chosenVoice);
@@ -169,7 +184,7 @@ function searchIcon() {
     });
   });
 }
-let voicesArr = [];
+
 function getChosenVoice() {
   let elements = document.getElementById("selectVoice");
 
@@ -253,7 +268,6 @@ function readWord(word, chosenVoice) {
 
 function selectWord(input) {
   const id = `${input}_li`;
-  console.log(id);
   const element = document.getElementById(id);
   element.setAttribute("class", "selectedWord");
   if (window.innerHeight + window.scrollY < document.body.offsetHeight) {
@@ -263,20 +277,20 @@ function selectWord(input) {
 
 function unSelectWord(input) {
   const id = `${input}_li`;
-
   const element = document.getElementById(id);
-
   element.removeAttribute("class", "selectedWord");
 }
 
 function nextPageBtn() {
-  const nextPage = document.getElementById("nextPage");
+  const nextPage = document.querySelectorAll(".nextPage");
 
-  nextPage.addEventListener("click", () => {
-    const delta = lastStudy.to - lastStudy.from; //100
-    lastStudy.from = lastStudy.to;
-    lastStudy.to = lastStudy.from + delta;
-    setLocalStorage("lastStudy", lastStudy);
-    writeInPage();
+  nextPage.forEach((element) => {
+    element.addEventListener("click", () => {
+      const delta = lastStudy.to - lastStudy.from; //100
+      lastStudy.from = lastStudy.to;
+      lastStudy.to = lastStudy.from + delta;
+      setLocalStorage("lastStudy", lastStudy);
+      writeInPage();
+    });
   });
 }
