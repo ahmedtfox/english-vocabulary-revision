@@ -8,11 +8,21 @@ const myForm = document.getElementById("myForm");
 const csvFile = document.getElementById("csvFile");
 let lastStudy = {
   from: 0,
+<<<<<<< HEAD
   to: 10,
 };
 
 let fileLines = [];
 let voicesArr = [];
+=======
+  to: 0,
+};
+
+let fileLines = [];
+
+
+/* 
+>>>>>>> 0a46a4ba5ad67cda87a2ab6060435fe154172f64
 myForm.addEventListener("submit", function (e) {
   e.preventDefault();
   const input = csvFile.files[0];
@@ -29,6 +39,14 @@ myForm.addEventListener("submit", function (e) {
 
   //console.log(text[2]);
 });
+ */
+async function loadWord() {
+  let response = await fetch("eng.csv");
+  text = await response.text();
+  prepareData(text);
+  //console.log(text);
+}
+loadWord();
 
 /* async function loadWord() {
   try {
@@ -61,15 +79,25 @@ function getInput() {
 }
 
 function prepareData(pram) {
+<<<<<<< HEAD
   console.log(pram);
   const lines = pram.split(/\r?\n/); // Split text into an array of lines
+=======
+  const lines = pram.split("."); // Split text into an array of lines
+>>>>>>> 0a46a4ba5ad67cda87a2ab6060435fe154172f64
   let newArr = [];
   for (let i = 0; i < lines.length; i++) {
     // Remove commas and trim whitespace
     //pram[i] = text.replace(/, */g, "");
     //console.log(lines[i].replace(/, */g, ""));
+<<<<<<< HEAD
     const line = lines[i].replace(/, */g, "");
     const line2 = line.split(".")[0];
+=======
+    //const line = lines[i].replace(/, */g, "");
+    const line = lines[i].replace(/\s/g, "");
+    const line2 = line;
+>>>>>>> 0a46a4ba5ad67cda87a2ab6060435fe154172f64
     newArr.push(line2);
   }
   fileLines = newArr;
@@ -282,6 +310,7 @@ function unSelectWord(input) {
 }
 
 function nextPageBtn() {
+<<<<<<< HEAD
   const nextPage = document.querySelectorAll(".nextPage");
 
   nextPage.forEach((element) => {
@@ -292,5 +321,15 @@ function nextPageBtn() {
       setLocalStorage("lastStudy", lastStudy);
       writeInPage();
     });
+=======
+  const nextPage = document.getElementById("nextPage");
+
+  nextPage.addEventListener("click", () => {
+    const delta = lastStudy.to - lastStudy.from; //100
+    lastStudy.from = lastStudy.to;
+    lastStudy.to = lastStudy.from + delta;
+    setLocalStorage("lastStudy", lastStudy);
+    writeInPage();
+>>>>>>> 0a46a4ba5ad67cda87a2ab6060435fe154172f64
   });
 }
