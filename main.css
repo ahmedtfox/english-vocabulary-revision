@@ -50,6 +50,13 @@ button {
   margin-left: 30px;
 }
 .nextPage {
+  margin: 30px;
+  margin-left: 30px;
+  width: 100px;
+  height: 50px;
+}
+#playBtn {
+  margin: 30px;
   margin-left: 30px;
   width: 100px;
   height: 50px;
