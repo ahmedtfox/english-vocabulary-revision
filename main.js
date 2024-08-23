@@ -54,7 +54,10 @@ function prepareData(pram) {
     //console.log(lines[i].replace(/, */g, ""));
     const line = lines[i].replace(/, */g, "");
     const line2 = line.split(".")[0];
-    newArr.push(line2);
+    if (line2 === "" || line2 === undefined) {
+    } else {
+      newArr.push(line2);
+    }
   }
   fileLines = newArr;
   setLocalStorage("fileLines", fileLines);
@@ -120,7 +123,11 @@ function writeInPage() {
   fileLines = getLocalStorage("fileLines");
   const container = document.getElementById("container");
   let html = "";
+  // const toVar = lastStudy.to >=
   for (let i = lastStudy.from; i < lastStudy.to; i++) {
+    if (fileLines[i] === undefined) {
+      break;
+    }
     html =
       html +
       `<li id="${fileLines[i]}_li">
@@ -221,6 +228,7 @@ function getChosenVoice() {
 
 let voices = [];
 let waitingTime = 1000;
+
 function readWord(word, chosenVoice) {
   if ("speechSynthesis" in window) {
     let msg = new SpeechSynthesisUtterance();
@@ -270,16 +278,19 @@ function nextPageBtn() {
 
   nextPage.forEach((element) => {
     element.addEventListener("click", () => {
-      const delta = lastStudy.to - lastStudy.from; //100
-      lastStudy.from = lastStudy.to;
-      lastStudy.to = lastStudy.from + delta;
-      setLocalStorage("lastStudy", lastStudy);
-      writeInPage();
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: "smooth",
-      });
+      if (lastStudy.to < fileLines.length) {
+        const delta = lastStudy.to - lastStudy.from; //100
+        lastStudy.from = lastStudy.to;
+        lastStudy.to = lastStudy.from + delta;
+
+        setLocalStorage("lastStudy", lastStudy);
+        writeInPage();
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: "smooth",
+        });
+      }
     });
   });
 }
